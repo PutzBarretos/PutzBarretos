@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DocJur SRP/ARP Municipal</title>
+    <style>
+      body { font-family: Arial, sans-serif; margin: 2rem; background: #f7f8fb; }
+      .card { background: white; padding: 1rem; margin-bottom: 1rem; border-radius: 8px; box-shadow: 0 1px 4px rgba(0,0,0,.08); }
+      input, button { padding: .5rem; margin: .25rem 0; }
+    </style>
+  </head>
+  <body>
+    <h1>DocJur SRP/ARP Municipal</h1>
+    <div class="card">
+      <h2>Dados Gerais</h2>
+      <input id="ente" placeholder="Ente" />
+      <input id="uf" placeholder="UF" maxlength="2" />
+      <input id="orgao" placeholder="Órgão" />
+      <input id="valor" placeholder="Valor global" type="number" step="0.01" />
+      <button onclick="criarProjeto()">Criar projeto</button>
+      <p id="status"></p>
+    </div>
+    <script>
+      async function criarProjeto() {
+        const payload = {
+          ente: document.getElementById('ente').value,
+          uf: document.getElementById('uf').value,
+          orgao: document.getElementById('orgao').value,
+          valor_global: Number(document.getElementById('valor').value || 0),
+          objeto_resumido: 'Solução integrada para prevenção, triagem e apoio ao diagnóstico precoce de câncer de pele',
+          processo_edital: '',
+          poc_habilitada: true
+        };
+        const res = await fetch('/projects', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(payload)});
+        const project = await res.json();
+        document.getElementById('status').textContent = `Projeto criado: ${project.id}`;
+      }
+    </script>
+  </body>
+</html>
